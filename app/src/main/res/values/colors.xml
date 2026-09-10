@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Theme Colors -->
+    <color name="forest_dark">#0A0F0D</color>
+    <color name="forest_green">#1B3022</color>
+    <color name="neon_green">#39FF14</color>
+    <color name="cyber_blue">#00D4FF</color>
+    <color name="pulse_red">#FF3131</color>
+    <color name="card_bg">#141E1A</color>
+    <color name="text_primary">#E0E0E0</color>
+    <color name="text_secondary">#9E9E9E</color>
+    <color name="divider">#2A3530</color>
+    
+    <!-- Bubble & Border Colors -->
+    <color name="bubble_sent_start">#1B3022</color>
+    <color name="bubble_sent_end">#102015</color>
+    <color name="bubble_received_start">#1E2522</color>
+    <color name="bubble_received_end">#141A18</color>
+    <color name="glass_border_light">#44FFFFFF</color>
+    
+    <!-- Enhanced UI Colors -->
+    <color name="neon_green_glow">#8839FF14</color>
+    <color name="cyber_blue_glow">#8800D4FF</color>
+    <color name="pulse_red_glow">#88FF3131</color>
+    
+    <!-- Gradient Variants -->
+    <color name="gradient_start">#0A0F0D</color>
+    <color name="gradient_mid">#1B3022</color>
+    <color name="gradient_end">#0A0F0D</color>
+    
+    <!-- Glass Effects -->
+    <color name="glass_overlay">#1AFFFFFF</color>
+    <color name="glass_border">#33FFFFFF</color>
+    
+    <!-- Map Node Colors -->
+    <color name="node_user">#2196F3</color>        <!-- Blue -->
+    <color name="node_nearby">#4CAF50</color>      <!-- Green -->
+    <color name="node_hub">#9C27B0</color>         <!-- Purple -->
+    <color name="sos_red">#F44336</color>          <!-- Red -->
+    <color name="node_hardware">#FF9800</color>    <!-- Orange -->
+    
+    <!-- Map UI Colors -->
+    <color name="primary">#1B3022</color>
+    <color name="accent">#00D4FF</color>
+
+    <!-- Signal Quality Semantic Colors -->
+    <color name="signal_excellent">#39FF14</color>  <!-- neon green -->
+    <color name="signal_good">#FFD600</color>        <!-- amber -->
+    <color name="signal_poor">#FF3131</color>        <!-- red -->
+
+    <!-- Delivery Status Colors -->
+    <color name="status_queued">#9E9E9E</color>
+    <color name="status_sent">#39FF14</color>
+    <color name="status_ack">#00D4FF</color>
+
+    <!-- Channel Chip Colors -->
+    <color name="channel_primary">#1B3022</color>
+    <color name="channel_secondary">#1A1A3C</color>
+    <color name="channel_emergency">#3B0000</color>
+
+    <!-- Map chat overlay -->
+    <color name="map_chat_bg">#E6090F0D</color>
+    
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

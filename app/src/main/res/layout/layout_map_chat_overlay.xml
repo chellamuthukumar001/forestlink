@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Map Chat Overlay – Slide-up bottom sheet integrated into the offline map.
+    Shows the last few mesh messages and allows quick send without leaving the map.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <!-- The bottom sheet itself -->
+    <LinearLayout
+        android:id="@+id/mapChatSheet"
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_map_chat_overlay"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="72dp"
+        app:behavior_skipCollapsed="false">
+
+        <!-- Drag Handle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="4dp"
+                android:background="#8000D4FF"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <!-- Header Row: title + node count + open-full button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_signal"
+                app:tint="@color/cyber_blue" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="MESH CHAT"
+                android:textColor="@color/cyber_blue"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:fontFamily="serif-monospace"
+                android:letterSpacing="0.12" />
+
+            <!-- Pending queue indicator -->
+            <TextView
+                android:id="@+id/tvMapQueueCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text=""
+                android:textColor="@color/neon_green"
+                android:textSize="10sp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenFullChat"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="FULL CHAT ›"
+                android:textColor="@color/neon_green"
+                android:textSize="11sp"
+                android:paddingHorizontal="8dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <!-- Mini Message List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapChatRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never" />
+
+        <!-- Quick Send Row -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mapChatInputRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="6dp"
+            android:background="@drawable/card_glass_bg">
+
+            <EditText
+                android:id="@+id/editMapMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Quick message..."
+                android:textColorHint="@color/text_secondary"
+                android:textColor="@color/text_primary"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:inputType="textCapSentences"
+                android:maxLines="2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnMapSend"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btnMapSend"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/shape_circle_btn"
+                android:backgroundTint="@color/neon_green"
+                android:src="@android:drawable/ic_menu_send"
+                android:contentDescription="Send message from map"
+                app:tint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Map-chat overlay background: translucent glassmorphism panel -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Dark translucent base -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <solid android:color="#E6090F0D" />
+        </shape>
+    </item>
+    <!-- Top glow border -->
+    <item android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="0dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="19dp"
+                android:topRightRadius="19dp" />
+            <gradient
+                android:angle="90"
+                android:startColor="#5500D4FF"
+                android:endColor="#0000D4FF"
+                android:type="linear" />
+        </shape>
+    </item>
+    <!-- Inner fill -->
+    <item android:top="1dp" android:left="1dp" android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="19dp"
+                android:topRightRadius="19dp" />
+            <solid android:color="#EC0A0F0D" />
+        </shape>
+    </item>
+</layer-list>

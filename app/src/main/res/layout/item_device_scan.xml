@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_device"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#1A141E1A"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#26FFFFFF"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <View
+            android:id="@+id/signal_glow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/circle_glow_cyan"
+            android:alpha="0.2"
+            app:layout_constraintStart_toStartOf="@id/img_device_icon"
+            app:layout_constraintEnd_toEndOf="@id/img_device_icon"
+            app:layout_constraintTop_toTopOf="@id/img_device_icon"
+            app:layout_constraintBottom_toBottomOf="@id/img_device_icon" />
+
+        <ImageView
+            android:id="@+id/img_device_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_mesh_node"
+            app:tint="@color/cyber_blue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/text_device_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Unknown Device"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:fontFamily="serif-monospace"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:letterSpacing="0.05"
+            app:layout_constraintStart_toEndOf="@id/img_device_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layout_rssi_indicator"
+            tools:text="FOREST_HUB_ALPHA" />
+
+        <TextView
+            android:id="@+id/text_device_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:text="00:00:00:00:00:00"
+            android:textColor="#88FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif-light"
+            app:layout_constraintStart_toEndOf="@id/img_device_icon"
+            app:layout_constraintTop_toBottomOf="@id/text_device_name"
+            app:layout_constraintEnd_toStartOf="@id/layout_rssi_indicator"
+            tools:text="1C:DB:D4:45:73:D5 • 12.4m" />
+
+        <LinearLayout
+            android:id="@+id/layout_rssi_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/text_rssi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-00 dBm"
+                android:textColor="@color/cyber_blue"
+                android:textSize="13sp"
+                android:fontFamily="serif-monospace"
+                android:textStyle="bold"
+                tools:text="-65 dBm" />
+            
+            <TextView
+                android:id="@+id/text_signal_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SIGNAL: 78%"
+                android:textColor="@color/neon_green"
+                android:textSize="9sp"
+                android:fontFamily="serif-monospace"
+                tools:text="STABLE"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

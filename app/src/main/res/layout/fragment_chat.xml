@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/forest_dark">
+
+    <!-- Header / Status -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/card_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="RANGER MESH"
+        app:titleTextColor="@color/cyber_blue"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:navigationIconTint="@color/cyber_blue" />
+
+    <!-- Channel Selector Chips -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/channelChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:background="@color/card_bg"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipChannelPrimary"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRIMARY"
+            android:textSize="10sp"
+            android:textColor="@color/neon_green"
+            android:checked="true"
+            app:chipBackgroundColor="@color/channel_primary"
+            app:chipStrokeColor="@color/neon_green"
+            app:chipStrokeWidth="1dp"
+            app:checkedIconTint="@color/neon_green" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipChannelSecondary"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SECONDARY"
+            android:textSize="10sp"
+            android:textColor="@color/cyber_blue"
+            app:chipBackgroundColor="@color/channel_secondary"
+            app:chipStrokeColor="@color/cyber_blue"
+            app:chipStrokeWidth="1dp"
+            app:checkedIconTint="@color/cyber_blue" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipChannelEmergency"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EMERGENCY"
+            android:textSize="10sp"
+            android:textColor="@color/pulse_red"
+            app:chipBackgroundColor="@color/channel_emergency"
+            app:chipStrokeColor="@color/pulse_red"
+            app:chipStrokeWidth="1dp"
+            app:checkedIconTint="@color/pulse_red" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Connection Status Banner -->
+    <LinearLayout
+        android:id="@+id/statusBannerRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/pulse_red"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/channelChipGroup">
+
+        <TextView
+            android:id="@+id/text_chat_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="DISCONNECTED"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvQueueDepth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            android:textColor="#CCFFFFFF"
+            android:textSize="10sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toTopOf="@id/typingIndicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusBannerRow" />
+
+    <!-- Typing Indicator (animated dots, shown when remote is typing) -->
+    <LinearLayout
+        android:id="@+id/typingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_input">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remote is typing"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:fontFamily="serif-monospace" />
+
+        <View
+            android:id="@+id/typingDot1"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/shape_circle_pulse"
+            android:backgroundTint="@color/cyber_blue"
+            android:alpha="0.3" />
+        <View
+            android:id="@+id/typingDot2"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginStart="3dp"
+            android:background="@drawable/shape_circle_pulse"
+            android:backgroundTint="@color/cyber_blue"
+            android:alpha="0.3" />
+        <View
+            android:id="@+id/typingDot3"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginStart="3dp"
+            android:background="@drawable/shape_circle_pulse"
+            android:backgroundTint="@color/cyber_blue"
+            android:alpha="0.3" />
+    </LinearLayout>
+
+    <!-- Chat Input Area -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="6dp"
+        android:background="@drawable/card_glass_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Attachment Button (Camera/Gallery) -->
+        <ImageButton
+            android:id="@+id/btn_attach"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_attach"
+            android:contentDescription="Attach media"
+            app:tint="@color/text_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@android:color/transparent"
+            android:hint="Encrypted message..."
+            android:textColorHint="@color/text_secondary"
+            android:textColor="@color/text_primary"
+            android:padding="12dp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_mic"
+            app:layout_constraintStart_toEndOf="@id/btn_attach"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Microphone Button (Voice Recording) -->
+        <ImageButton
+            android:id="@+id/btn_mic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_mic"
+            android:contentDescription="Record voice message"
+            app:tint="@color/text_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_send"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/shape_circle_btn"
+            android:backgroundTint="@color/neon_green"
+            android:src="@android:drawable/ic_menu_send"
+            android:contentDescription="Send message"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/black" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Recording Overlay (shown while recording voice) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_recording"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="6dp"
+        android:background="@drawable/card_glass_bg"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Pulsing Red Recording Indicator -->
+        <View
+            android:id="@+id/recording_dot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_recording_indicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/text_recording_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="RECORDING..."
+            android:textColor="@color/pulse_red"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/recording_dot"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/text_recording_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="0s"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/text_recording_label"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Cancel Recording -->
+        <ImageButton
+            android:id="@+id/btn_cancel_recording"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_delete"
+            android:contentDescription="Cancel recording"
+            app:tint="@color/pulse_red"
+            app:layout_constraintEnd_toStartOf="@id/btn_stop_recording"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Stop & Send Recording -->
+        <ImageButton
+            android:id="@+id/btn_stop_recording"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/shape_circle_btn"
+            android:backgroundTint="@color/neon_green"
+            android:src="@android:drawable/ic_menu_send"
+            android:contentDescription="Stop and send recording"
+            app:tint="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

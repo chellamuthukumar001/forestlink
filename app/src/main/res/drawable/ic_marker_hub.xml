@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56">
+    
+    <!-- Outer glow -->
+    <path
+        android:pathData="M28,28m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"
+        android:fillColor="#3D9C27B0"
+        android:fillAlpha="0.4"/>
+    
+    <!-- Main hub circle -->
+    <path
+        android:pathData="M28,28m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+        android:fillColor="#9C27B0"/>
+    
+    <!-- Hub icon (tower) -->
+    <path
+        android:pathData="M28,12 L28,44 M20,20 L36,20 M22,28 L34,28 M24,36 L32,36"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"/>
+        
+    <!-- Signal waves -->
+    <path
+        android:pathData="M16,16 Q12,20 12,28 Q12,36 16,40"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillType="nonZero"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M40,16 Q44,20 44,28 Q44,36 40,40"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillType="nonZero"
+        android:strokeLineCap="round"/>
+</vector>
