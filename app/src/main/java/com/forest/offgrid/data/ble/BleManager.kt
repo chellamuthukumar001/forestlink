@@ -587,7 +587,9 @@ class BleManager private constructor(private val context: Context) {
                     _nodeData.value = data
                 }
                 
-                data.contains("GPS|") || data.contains("BAT|") -> {
+                data.contains("GPS|") || data.contains("BAT|") ||
+                data.startsWith("AI_ROUTE|") || data.startsWith("HEALTH|") ||
+                data.startsWith("ANOMALY|") || data.startsWith("TLM|") -> {
                     _hardwareData.value = data
                 }
             }

@@ -175,6 +175,58 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_mesh_label" />
 
+            <!-- AI Telemetry & Health Subtitle -->
+            <LinearLayout
+                android:id="@+id/layout_ai_indicators"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/text_routing_status">
+
+                <TextView
+                    android:id="@+id/text_ai_reliability"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="AI LINK: --"
+                    android:textColor="@color/cyber_blue"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace" />
+
+                <TextView
+                    android:id="@+id/text_node_health"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HEALTH: HEALTHY"
+                    android:textColor="@color/neon_green"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace" />
+            </LinearLayout>
+
+            <!-- Active Anomaly Alert Banner -->
+            <LinearLayout
+                android:id="@+id/layout_anomaly_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="#33FF1744"
+                android:padding="6dp"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/layout_ai_indicators">
+
+                <TextView
+                    android:id="@+id/text_anomaly_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="⚠️ ANOMALY: NO ACTIVE ALERTS"
+                    android:textColor="@color/pulse_red"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:fontFamily="monospace" />
+            </LinearLayout>
+
             <com.forest.offgrid.ui.dashboard.RadarSweepView
                 android:id="@+id/img_mesh_visual"
                 android:layout_width="0dp"
@@ -183,7 +235,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_routing_status" />
+                app:layout_constraintTop_toBottomOf="@id/layout_anomaly_alert" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -197,25 +197,77 @@ class MsgRepository private constructor(private val context: Context, private va
     }
 
     private fun parseHardwareData(data: String) {
-        // Format: GPS|lat,lng|BAT|80 OR GPS:lat,lng
+        // Format: GPS|lat,lng|BAT|80 OR AI_ROUTE|dest|nextHop|0.85|AI_DIRECT OR HEALTH|HEALTHY|48.0 OR ANOMALY|STORM|CRITICAL|desc
         try {
             var lat = _hardwareState.value.gpsLat
             var lng = _hardwareState.value.gpsLng
             var bat = _hardwareState.value.batteryLevel
+            var routeInfo = _hardwareState.value.aiRouteInfo
+            var health = _hardwareState.value.nodeHealth
+            val anomalies = _hardwareState.value.activeAnomalies.toMutableList()
 
             val parts = data.replace(":", "|").split("|")
-            for (i in parts.indices) {
+            var i = 0
+            while (i < parts.size) {
                 when (parts[i]) {
                     "GPS" -> {
-                        val coordStr = parts.getOrNull(i+1)
+                        val coordStr = parts.getOrNull(i + 1)
                         if (coordStr != null && coordStr.contains(",")) {
                             val coords = coordStr.split(",")
                             lat = coords[0].toDoubleOrNull() ?: lat
                             lng = coords[1].toDoubleOrNull() ?: lng
                         }
+                        i += 2
                     }
                     "BAT" -> {
-                        bat = parts.getOrNull(i+1)?.toIntOrNull() ?: bat
+                        bat = parts.getOrNull(i + 1)?.toIntOrNull() ?: bat
+                        i += 2
+                    }
+                    "AI_ROUTE" -> {
+                        // AI_ROUTE|<dest>|<nextHop>|<relScore>|<mode>
+                        val dest = parts.getOrNull(i + 1) ?: "ALL"
+                        val next = parts.getOrNull(i + 2) ?: "DIRECT"
+                        val score = parts.getOrNull(i + 3)?.toFloatOrNull() ?: 1.0f
+                        val modeStr = parts.getOrNull(i + 4) ?: "AI_DIRECT"
+                        val mode = try { RoutingMode.valueOf(modeStr) } catch (e: Exception) { RoutingMode.AI_DIRECT }
+                        routeInfo = AiRouteInfo(
+                            destNodeId = dest,
+                            nextHopNodeId = next,
+                            reliabilityScore = score,
+                            mode = mode,
+                            reason = "AI next-hop active"
+                        )
+                        i += 5
+                    }
+                    "HEALTH" -> {
+                        // HEALTH|<status>|<hoursRemaining>
+                        val statusStr = parts.getOrNull(i + 1) ?: "HEALTHY"
+                        val hours = parts.getOrNull(i + 2)?.toFloatOrNull() ?: 24.0f
+                        val status = try { HealthStatus.valueOf(statusStr) } catch (e: Exception) { HealthStatus.HEALTHY }
+                        health = health.copy(
+                            status = status,
+                            batteryPct = bat,
+                            hoursRemainingEst = hours,
+                            lastUpdatedMillis = System.currentTimeMillis()
+                        )
+                        i += 3
+                    }
+                    "ANOMALY" -> {
+                        // ANOMALY|<type>|<severity>|<desc>
+                        val type = parts.getOrNull(i + 1) ?: "NETWORK_EVENT"
+                        val sevStr = parts.getOrNull(i + 2) ?: "MEDIUM"
+                        val desc = parts.getOrNull(i + 3) ?: "Abnormal network activity detected"
+                        val sev = try { AlertSeverity.valueOf(sevStr) } catch (e: Exception) { AlertSeverity.MEDIUM }
+                        anomalies.add(0, NetworkAnomalyAlert(
+                            alertId = "ALERT_${System.currentTimeMillis()}",
+                            alertType = type,
+                            severity = sev,
+                            description = desc
+                        ))
+                        i += 4
+                    }
+                    else -> {
+                        i++
                     }
                 }
             }
@@ -223,6 +275,9 @@ class MsgRepository private constructor(private val context: Context, private va
                 gpsLat = lat,
                 gpsLng = lng,
                 batteryLevel = bat,
+                aiRouteInfo = routeInfo,
+                nodeHealth = health,
+                activeAnomalies = anomalies.take(10),
                 lastUpdate = System.currentTimeMillis()
             )
         } catch (e: Exception) {

@@ -7,7 +7,10 @@ data class HardwareState(
     val gpsLng: Double = 0.0,
     val lastUpdate: Long = 0L,
     val rssi: Int = 0,
-    val isAdvertising: Boolean = false
+    val isAdvertising: Boolean = false,
+    val aiRouteInfo: AiRouteInfo = AiRouteInfo(),
+    val nodeHealth: AiNodeHealth = AiNodeHealth(),
+    val activeAnomalies: List<NetworkAnomalyAlert> = emptyList()
 )
 
 enum class ConnectionState {

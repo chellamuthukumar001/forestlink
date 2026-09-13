@@ -1,0 +1,21 @@
+{
+  "name": "forestlink-gateway-logger",
+  "version": "1.0.0",
+  "description": "ForestLink Gateway Telemetry Ingest & Supabase Logging Pipeline",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node mock_gateway_test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.43.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "optionalDependencies": {
+    "serialport": "^12.0.0"
+  },
+  "keywords": ["lora", "mesh", "telemetry", "supabase", "iot"],
+  "author": "ForestLink",
+  "license": "MIT"
+}

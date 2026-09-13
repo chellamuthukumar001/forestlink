@@ -1,0 +1,49 @@
+{
+  "model_type": "RandomForestClassifier",
+  "n_estimators": 12,
+  "max_depth": 4,
+  "accuracy": 0.765,
+  "precision": 0.641399416909621,
+  "recall": 0.6626506024096386,
+  "f1_score": 0.6518518518518519,
+  "roc_auc": 0.867201590794315,
+  "brier_score": 0.14052582742356226,
+  "confusion_matrix": [
+    [
+      545,
+      123
+    ],
+    [
+      112,
+      220
+    ]
+  ],
+  "feature_names": [
+    "rssi",
+    "snr",
+    "link_margin",
+    "packet_loss_rate",
+    "battery_pct",
+    "battery_voltage_mv",
+    "queue_len",
+    "congestion_ratio",
+    "distance_m",
+    "hop_count",
+    "last_seen_sec",
+    "freshness_factor"
+  ],
+  "feature_importances": {
+    "link_margin": 0.3307739741147275,
+    "snr": 0.2782952790152353,
+    "packet_loss_rate": 0.11722955834983409,
+    "rssi": 0.07721751070422891,
+    "queue_len": 0.06828652690136025,
+    "congestion_ratio": 0.05219817308226586,
+    "battery_voltage_mv": 0.02773795453820246,
+    "distance_m": 0.019090025667831745,
+    "battery_pct": 0.018547932803766494,
+    "freshness_factor": 0.006071405738607895,
+    "last_seen_sec": 0.0035480927482194773,
+    "hop_count": 0.0010035663357202233
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "features": [
+    "battery_voltage_mv",
+    "battery_pct",
+    "dv_dt_mv_per_hr",
+    "temperature_c",
+    "rssi_variance",
+    "missed_heartbeats"
+  ],
+  "classes": [
+    "HEALTHY",
+    "DEGRADING",
+    "CRITICAL"
+  ],
+  "accuracy": 1.0,
+  "importances": {
+    "battery_voltage_mv": 0.25669565061381955,
+    "battery_pct": 0.14304534132799712,
+    "dv_dt_mv_per_hr": 0.33594235153404844,
+    "temperature_c": 0.0022136144597637675,
+    "rssi_variance": 0.22976993577168625,
+    "missed_heartbeats": 0.03233310629268489
+  }
+}

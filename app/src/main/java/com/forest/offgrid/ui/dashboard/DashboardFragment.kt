@@ -171,6 +171,39 @@ class DashboardFragment : Fragment() {
                 } else {
                     "OFFLINE - CHECK DEVICE POWER"
                 }
+
+                // AI Route & Next-Hop status
+                val route = state.aiRouteInfo
+                if (isConnected) {
+                    val scorePct = (route.reliabilityScore * 100).toInt()
+                    binding.textAiReliability.text = "AI: ${scorePct}% -> ${route.nextHopNodeId}"
+                    val aiColor = if (scorePct >= 70) R.color.neon_green 
+                                  else if (scorePct >= 40) R.color.cyber_blue 
+                                  else R.color.pulse_red
+                    binding.textAiReliability.setTextColor(resources.getColor(aiColor, null))
+                } else {
+                    binding.textAiReliability.text = "AI LINK: --"
+                    binding.textAiReliability.setTextColor(resources.getColor(R.color.text_secondary, null))
+                }
+
+                // Node Health status
+                val health = state.nodeHealth
+                binding.textNodeHealth.text = "HEALTH: ${health.status.name}"
+                val healthColor = when (health.status) {
+                    com.forest.offgrid.data.model.HealthStatus.HEALTHY -> R.color.neon_green
+                    com.forest.offgrid.data.model.HealthStatus.DEGRADING -> R.color.cyber_blue
+                    com.forest.offgrid.data.model.HealthStatus.CRITICAL -> R.color.pulse_red
+                }
+                binding.textNodeHealth.setTextColor(resources.getColor(healthColor, null))
+
+                // Active Anomaly Alert Banner
+                if (state.activeAnomalies.isNotEmpty()) {
+                    val latestAlert = state.activeAnomalies.first()
+                    binding.layoutAnomalyAlert.visibility = View.VISIBLE
+                    binding.textAnomalyBanner.text = "⚠️ [${latestAlert.severity}] ${latestAlert.description}"
+                } else {
+                    binding.layoutAnomalyAlert.visibility = View.GONE
+                }
                 
                 // Update Mesh Visual based on state
                 binding.imgMeshVisual.alpha = if (isConnected) 1.0f else 0.2f
