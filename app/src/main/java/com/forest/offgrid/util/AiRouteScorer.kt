@@ -46,18 +46,18 @@ object AiRouteScorer {
 
     fun predictReliability(features: FloatArray): Float {
         var sum = 0.0f
-        sum += evalTree0(f)
-        sum += evalTree1(f)
-        sum += evalTree2(f)
-        sum += evalTree3(f)
-        sum += evalTree4(f)
-        sum += evalTree5(f)
-        sum += evalTree6(f)
-        sum += evalTree7(f)
-        sum += evalTree8(f)
-        sum += evalTree9(f)
-        sum += evalTree10(f)
-        sum += evalTree11(f)
+        sum += evalTree0(features)
+        sum += evalTree1(features)
+        sum += evalTree2(features)
+        sum += evalTree3(features)
+        sum += evalTree4(features)
+        sum += evalTree5(features)
+        sum += evalTree6(features)
+        sum += evalTree7(features)
+        sum += evalTree8(features)
+        sum += evalTree9(features)
+        sum += evalTree10(features)
+        sum += evalTree11(features)
         return sum / 12.0f
     }
 

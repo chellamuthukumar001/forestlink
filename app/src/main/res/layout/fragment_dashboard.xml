@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/forest_dark">
+    android:background="@android:color/transparent">
 
     <!-- Header Section -->
     <TextView
@@ -21,8 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Simulation Switch Removed -->
-
     <!-- Status Cards Container -->
     <LinearLayout
         android:id="@+id/layout_status"
@@ -38,9 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            app:cardBackgroundColor="#1A141E1A"
-            app:cardCornerRadius="12dp"
-            app:strokeColor="#26FFFFFF"
+            app:cardBackgroundColor="#D9111D17"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="#3300D4FF"
             app:strokeWidth="1dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,9 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="4dp"
-            app:cardBackgroundColor="#1A141E1A"
-            app:cardCornerRadius="12dp"
-            app:strokeColor="#26FFFFFF"
+            app:cardBackgroundColor="#D9111D17"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="#3300D4FF"
             app:strokeWidth="1dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,9 +102,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            app:cardBackgroundColor="#1A141E1A"
-            app:cardCornerRadius="12dp"
-            app:strokeColor="#26FFFFFF"
+            app:cardBackgroundColor="#D9111D17"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="#3300D4FF"
             app:strokeWidth="1dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -139,9 +137,9 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginVertical="24dp"
-        app:cardBackgroundColor="#2A141E1A"
+        app:cardBackgroundColor="#D9111D17"
         app:cardCornerRadius="16dp"
-        app:strokeColor="@color/cyber_blue"
+        app:strokeColor="#4000D4FF"
         app:strokeWidth="1dp"
         app:layout_constraintBottom_toTopOf="@id/btn_sos_container"
         app:layout_constraintTop_toBottomOf="@id/layout_status">
@@ -296,10 +294,14 @@
             android:id="@+id/btn_quick_text"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="56dp"
             android:text="SEND MESSAGE"
             android:textColor="@color/white"
-            app:cornerRadius="12dp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            app:backgroundTint="#D9111D17"
+            app:cornerRadius="14dp"
+            app:strokeWidth="1.5dp"
             app:strokeColor="@color/cyber_blue" />
 
     </LinearLayout>

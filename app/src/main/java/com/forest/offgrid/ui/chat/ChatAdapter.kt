@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.forest.offgrid.R
 import com.forest.offgrid.data.model.Message
@@ -56,9 +57,23 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
     }
 
     fun submitList(newMessages: List<Message>) {
+        val oldList = ArrayList(messages)
+        val diffCallback = object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = oldList.size
+            override fun getNewListSize(): Int = newMessages.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return oldList[oldItemPosition].id == newMessages[newItemPosition].id
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return oldList[oldItemPosition] == newMessages[newItemPosition]
+            }
+        }
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         messages.clear()
         messages.addAll(newMessages)
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
