@@ -95,12 +95,54 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Info about compression -->
+    <!-- Grayscale Optimization Toggle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/card_glass_bg"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fast Off-Grid Mode (Grayscale)"
+                android:textColor="@color/neon_green"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_speed_estimate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ WebP Color: ~2-5 KB (Est: ~18s @ SF7)"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switch_grayscale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:thumbTint="@color/neon_green"
+            app:trackTint="@color/cyber_blue" />
+    </LinearLayout>
+
+    <!-- Info about LoRa FEC + Super-Resolution -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="⚡ Images are compressed for LoRa transmission (tiny thumbnails)"
-        android:textColor="@color/text_secondary"
+        android:text="⚡ 180B FEC Shards (10:3 RS) + On-Device 4x Super-Resolution"
+        android:textColor="@color/cyber_blue"
         android:textSize="10sp"
         android:gravity="center"
         android:paddingVertical="8dp" />

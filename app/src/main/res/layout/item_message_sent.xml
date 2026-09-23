@@ -45,6 +45,34 @@
                 app:strokeWidth="1dp"
                 app:strokeColor="#33FFFFFF" />
 
+            <!-- Progressive Reconstruction Container -->
+            <LinearLayout
+                android:id="@+id/layout_image_progress"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="2dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progress_reconstruction"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="@color/neon_green" />
+
+                <TextView
+                    android:id="@+id/text_image_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="LoRa Transmission..."
+                    android:textColor="@color/neon_green"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
             <!-- Voice Message Layout (hidden by default) -->
             <LinearLayout
                 android:id="@+id/layout_voice"

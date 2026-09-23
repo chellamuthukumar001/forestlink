@@ -3,6 +3,7 @@ package com.forest.offgrid.ui.chat
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -11,10 +12,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.forest.offgrid.R
+import com.forest.offgrid.core.imaging.api.ImageStage
+import com.forest.offgrid.core.imaging.api.ImageTransferState
 import com.forest.offgrid.data.model.Message
 import com.forest.offgrid.data.model.MessageStatus
 import com.forest.offgrid.data.model.MessageType
@@ -22,11 +26,19 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
 
 class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
 
     private val messages = mutableListOf<Message>()
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    private val transferStates = ConcurrentHashMap<Int, ImageTransferState>()
+
+    fun updateTransferStates(states: Map<Int, ImageTransferState>) {
+        transferStates.clear()
+        transferStates.putAll(states)
+        notifyDataSetChanged()
+    }
     
     // Track currently playing audio
     private var mediaPlayer: MediaPlayer? = null
@@ -120,6 +132,9 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
         
         // Media views
         private val imgMedia: ImageView? = itemView.findViewById(R.id.img_media)
+        private val layoutImageProgress: View? = itemView.findViewById(R.id.layout_image_progress)
+        private val progressReconstruction: ProgressBar? = itemView.findViewById(R.id.progress_reconstruction)
+        private val textImageStatus: TextView? = itemView.findViewById(R.id.text_image_status)
         private val layoutVoice: LinearLayout? = itemView.findViewById(R.id.layout_voice)
         private val btnPlayVoice: ImageButton? = itemView.findViewById(R.id.btn_play_voice)
         private val textVoiceDuration: TextView? = itemView.findViewById(R.id.text_voice_duration)
@@ -141,6 +156,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
             // Reset all media views to default state
             textContent.visibility = View.GONE
             imgMedia?.visibility = View.GONE
+            layoutImageProgress?.visibility = View.GONE
             layoutVoice?.visibility = View.GONE
             
             when (message.type) {
@@ -202,24 +218,76 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
             
             imgMedia?.let { imageView ->
                 val filePath = message.mediaFilePath
-                if (filePath != null && File(filePath).exists()) {
+                var decodedBitmap: android.graphics.Bitmap? = null
+
+                if (filePath != null) {
                     try {
-                        val bitmap = BitmapFactory.decodeFile(filePath)
-                        if (bitmap != null) {
-                            imageView.setImageBitmap(bitmap)
-                            imageView.visibility = View.VISIBLE
-                            textContent.visibility = View.GONE
-                            
-                            // Tapping image opens fullscreen preview
-                            imageView.setOnClickListener {
-                                showImagePreviewDialog(itemView.context, filePath)
+                        decodedBitmap = when {
+                            filePath.startsWith("content://") -> {
+                                val uri = Uri.parse(filePath)
+                                itemView.context.contentResolver.openInputStream(uri)?.use {
+                                    BitmapFactory.decodeStream(it)
+                                }
                             }
+                            File(filePath).exists() -> BitmapFactory.decodeFile(filePath)
+                            else -> null
                         }
                     } catch (e: Exception) {
-                        textContent.visibility = View.VISIBLE
-                        textContent.text = "📷 [Image file not found]"
+                        decodedBitmap = null
+                    }
+                }
+
+                // Check active LoRa / Super-Resolution transfer states
+                val activeTransfer = transferStates.values.firstOrNull { transfer ->
+                    transfer.savedFilePath == filePath || (!transfer.isFinished && message.status == MessageStatus.SENDING)
+                }
+
+                if (activeTransfer != null && !activeTransfer.isFinished) {
+                    layoutImageProgress?.visibility = View.VISIBLE
+                    progressReconstruction?.progress = activeTransfer.progressPercentage
+
+                    when (activeTransfer.stage) {
+                        ImageStage.COMPRESSING -> {
+                            textImageStatus?.text = "Compressing WebP..."
+                        }
+                        ImageStage.CHUNKING -> {
+                            textImageStatus?.text = "FEC Encoding (10:3 RS)..."
+                        }
+                        ImageStage.TRANSMITTING -> {
+                            textImageStatus?.text = "LoRa TX (${activeTransfer.currentShard}/${activeTransfer.totalShards}) ~${activeTransfer.estimatedTimeSeconds}s"
+                        }
+                        ImageStage.REASSEMBLING -> {
+                            textImageStatus?.text = "Reassembling RS FEC (${activeTransfer.currentShard}/${activeTransfer.dataShards})..."
+                            if (activeTransfer.previewBitmap != null) {
+                                imageView.setImageBitmap(activeTransfer.previewBitmap)
+                                imageView.visibility = View.VISIBLE
+                                textContent.visibility = View.GONE
+                            }
+                        }
+                        ImageStage.SUPER_RESOLVING -> {
+                            textImageStatus?.text = "⚡ Enhancing with 4x Super-Resolution..."
+                        }
+                        else -> {
+                            layoutImageProgress?.visibility = View.GONE
+                        }
                     }
                 } else {
+                    layoutImageProgress?.visibility = View.GONE
+                }
+
+                if (decodedBitmap != null) {
+                    imageView.setImageBitmap(decodedBitmap)
+                    imageView.visibility = View.VISIBLE
+                    textContent.visibility = View.GONE
+
+                    imageView.setOnClickListener {
+                        showImagePreviewDialog(itemView.context, filePath ?: "")
+                    }
+                } else if (activeTransfer?.previewBitmap != null) {
+                    imageView.setImageBitmap(activeTransfer.previewBitmap)
+                    imageView.visibility = View.VISIBLE
+                    textContent.visibility = View.GONE
+                } else if (filePath == null) {
                     textContent.visibility = View.VISIBLE
                     textContent.text = "📷 [Image loading...]"
                 }

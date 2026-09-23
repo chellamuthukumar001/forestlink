@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -48,6 +49,7 @@ class ChatFragment : Fragment() {
 
     // Selected channel prefix
     private var channelPrefix = "" // empty = PRIMARY
+    private var isGrayscaleSelected = false
 
     // Camera photo URI
     private var pendingCameraUri: Uri? = null
@@ -57,8 +59,9 @@ class ChatFragment : Fragment() {
         ActivityResultContracts.TakePicture()
     ) { success ->
         if (success && pendingCameraUri != null) {
-            viewModel.sendImageMessage(pendingCameraUri!!)
-            Toast.makeText(context, "📷 Sending image...", Toast.LENGTH_SHORT).show()
+            viewModel.sendImageMessage(pendingCameraUri!!, isGrayscaleSelected)
+            val modeStr = if (isGrayscaleSelected) "Grayscale" else "Color (4x SR)"
+            Toast.makeText(context, "📷 Sending photo [$modeStr]...", Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -67,8 +70,9 @@ class ChatFragment : Fragment() {
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            viewModel.sendImageMessage(it)
-            Toast.makeText(context, "📷 Sending image...", Toast.LENGTH_SHORT).show()
+            viewModel.sendImageMessage(it, isGrayscaleSelected)
+            val modeStr = if (isGrayscaleSelected) "Grayscale" else "Color (4x SR)"
+            Toast.makeText(context, "📷 Sending photo [$modeStr]...", Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -266,6 +270,13 @@ class ChatFragment : Fragment() {
             }
         }
 
+        // Observe live LoRa photo reconstruction & Super-Resolution progress
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.photoTransferStates.collect { states ->
+                chatAdapter.updateTransferStates(states)
+            }
+        }
+
         // Typing dots animation trigger: show typing when a new message arrives and is short
         // (Approximation – in a real mesh protocol you'd send a typing packet)
         startTypingDotsAnimation()
@@ -290,6 +301,21 @@ class ChatFragment : Fragment() {
     private fun showAttachmentOptions() {
         val bottomSheet = BottomSheetDialog(requireContext(), R.style.Theme_OffGridCommunication)
         val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_attach, null)
+
+        val switchGrayscale = sheetView.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switch_grayscale)
+        val textSpeed = sheetView.findViewById<TextView>(R.id.text_speed_estimate)
+
+        switchGrayscale?.isChecked = isGrayscaleSelected
+        switchGrayscale?.setOnCheckedChangeListener { _, isChecked ->
+            isGrayscaleSelected = isChecked
+            if (isChecked) {
+                textSpeed?.text = "⚡ WebP Mono: ~1-2 KB (Est: ~6s @ SF7) - 3x Faster!"
+                textSpeed?.setTextColor(resources.getColor(R.color.neon_green, null))
+            } else {
+                textSpeed?.text = "⚡ WebP Color: ~2-5 KB (Est: ~18s @ SF7)"
+                textSpeed?.setTextColor(resources.getColor(R.color.text_secondary, null))
+            }
+        }
         
         sheetView.findViewById<View>(R.id.option_camera)?.setOnClickListener {
             bottomSheet.dismiss()

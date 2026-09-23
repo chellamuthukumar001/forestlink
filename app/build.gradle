@@ -33,6 +33,12 @@ android {
         dataBinding true
         viewBinding true
     }
+    aaptOptions {
+        noCompress "tflite"
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -62,4 +68,11 @@ dependencies {
     
     // Gson for JSON parsing
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // TensorFlow Lite for on-device Super-Resolution
+    implementation 'org.tensorflow:tensorflow-lite:2.14.0'
+
+    // Unit Testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
 }
