@@ -54,15 +54,20 @@ object SecurityUtils {
 
     fun decrypt(encryptedText: String): String {
         return try {
+            // If the text is not valid AES hex blocks (multiple of 32 hex chars), treat as plain text
+            if (encryptedText.length < 32 || encryptedText.length % 32 != 0 || !encryptedText.all { it in "0123456789abcdefABCDEF" }) {
+                return encryptedText
+            }
             val key = generateKey()
             val cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, key)
             val decodedBytes = hexToBytes(encryptedText)
             val decryptedBytes = cipher.doFinal(decodedBytes)
-            String(decryptedBytes, Charsets.UTF_8).filter { it.code in 32..126 } // Filter printable ASCII
+            val result = String(decryptedBytes, Charsets.UTF_8).filter { it.code in 32..126 }
+            if (result.isNotBlank()) result else encryptedText
         } catch (e: Exception) {
             e.printStackTrace()
-            "[Decryption Error: ${e.message}]"
+            encryptedText
         }
     }
 
