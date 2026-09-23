@@ -44,6 +44,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /** Number of messages waiting in the BLE write queue. */
     val writeQueuePending = BleManager.getInstance(application).writeQueuePending
 
+    /** Live off-grid image transfer & super-resolution pipeline states. */
+    val photoTransferStates = repository.imagingPipeline.transferStates
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
+
     // Recording state for UI
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording
@@ -73,11 +77,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
     
     /**
-     * Sends an image message from a content URI (camera or gallery).
+     * Sends an image message from a content URI with optional grayscale compression.
      */
-    fun sendImageMessage(uri: Uri) {
+    fun sendImageMessage(uri: Uri, isGrayscale: Boolean = false) {
         viewModelScope.launch {
-            repository.sendImageMessage(uri)
+            repository.sendImageMessage(uri, isGrayscale)
         }
     }
     

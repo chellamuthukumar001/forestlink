@@ -97,6 +97,14 @@ class BleManager private constructor(private val context: Context) {
     private val _isAdvertising = MutableStateFlow(false)
     val isAdvertising: StateFlow<Boolean> = _isAdvertising
 
+    // ── Raw Binary Transceiver Stream (0xA1 Photo Chunks, LoRa frames) ────────
+    private val _rawBytesReceived = kotlinx.coroutines.flow.MutableSharedFlow<ByteArray>(replay = 0)
+    val rawBytesReceived: kotlinx.coroutines.flow.SharedFlow<ByteArray> = _rawBytesReceived
+
+    // Transceiver mode: bidirectional BLE Central + Peripheral relay
+    private val _isTransceiverMode = MutableStateFlow(true)
+    val isTransceiverMode: StateFlow<Boolean> = _isTransceiverMode
+
     // ── Reconnect Backoff ────────────────────────────────────────────────────
     private val _reconnectCountdown = MutableStateFlow(-1) // -1 = not reconnecting
     val reconnectCountdown: StateFlow<Int> = _reconnectCountdown
@@ -350,7 +358,7 @@ class BleManager private constructor(private val context: Context) {
         }, 200)
     }
 
-    /** Attempt silent reconnect to last known device with exponential backoff. */
+    /** Attempt silent reconnect to last known device with exponential backoff & jitter. */
     fun triggerReconnect() {
         val target = lastConnectedDevice ?: run {
             val lastMac = prefs.getString(KEY_LAST_DEVICE, null) ?: return
@@ -364,9 +372,11 @@ class BleManager private constructor(private val context: Context) {
 
         reconnectJob?.cancel()
         reconnectJob = scope.launch {
-            val delayMs = RECONNECT_DELAYS.getOrElse(reconnectAttempt) { RECONNECT_DELAYS.last() }
+            val baseDelayMs = RECONNECT_DELAYS.getOrElse(reconnectAttempt) { RECONNECT_DELAYS.last() }
+            val jitter = kotlin.random.Random.nextLong(200, 800)
+            val delayMs = baseDelayMs + jitter
             val delaySec = (delayMs / 1000).toInt()
-            Log.d("BleManager", "Reconnect attempt ${reconnectAttempt + 1} in ${delaySec}s")
+            Log.d("BleManager", "Reconnect attempt ${reconnectAttempt + 1} in ${delaySec}s (jitter: ${jitter}ms)")
 
             // Countdown for UI
             for (t in delaySec downTo 1) {
@@ -394,13 +404,28 @@ class BleManager private constructor(private val context: Context) {
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                Log.e("BleManager", "Connection failed with status: $status")
+                val isGatt133 = (status == 133)
+                Log.e("BleManager", "Connection failed with status: $status (isGatt133=$isGatt133)")
+                handler.removeCallbacks(connectionTimeoutRunnable)
                 _connectionState.value = ConnectionState.DISCONNECTED
-                bluetoothGatt?.close()
+                try {
+                    bluetoothGatt?.disconnect()
+                    bluetoothGatt?.close()
+                } catch (e: Exception) {
+                    Log.w("BleManager", "Error closing gatt on failure: ${e.message}")
+                }
                 bluetoothGatt = null
                 _connectedDevice.value = null
-                // Trigger backoff reconnect on failure
-                if (!userRequestedDisconnect) triggerReconnect()
+                if (::writeQueue.isInitialized) writeQueue.drain()
+
+                // Trigger backoff reconnect on failure with extra delay for 133
+                if (!userRequestedDisconnect) {
+                    if (isGatt133) {
+                        handler.postDelayed({ triggerReconnect() }, 800)
+                    } else {
+                        triggerReconnect()
+                    }
+                }
                 return
             }
 
@@ -508,10 +533,14 @@ class BleManager private constructor(private val context: Context) {
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
             if (characteristic.uuid == CHAR_RX_UUID) {
-                // Handle different deprecated methods if needed, but for now assuming standard byte access
-                val dataBytes = characteristic.value
-                val data = String(dataBytes)
-                handleIncomingData(data)
+                val dataBytes = characteristic.value ?: return
+                // Check if packet is binary LoRa photo chunk (Magic 0xA1)
+                if (dataBytes.isNotEmpty() && dataBytes[0] == 0xA1.toByte()) {
+                    scope.launch { _rawBytesReceived.emit(dataBytes) }
+                } else {
+                    val data = String(dataBytes)
+                    handleIncomingData(data)
+                }
             }
         }
     }
@@ -667,6 +696,58 @@ class BleManager private constructor(private val context: Context) {
         }
     }
 
+    /**
+     * Sends a raw binary packet via BLE write queue or GATT server.
+     */
+    fun sendRawBytes(bytes: ByteArray) {
+        // 1. Send as Client via write queue
+        if (bluetoothGatt != null && txCharacteristic != null && ::writeQueue.isInitialized) {
+            scope.launch { writeQueue.enqueue(bytes) }
+        }
+
+        // 2. Send as Server (Notify connected Clients via GATT server)
+        if (bluetoothGattServer != null && connectedClients.isNotEmpty()) {
+            val service = bluetoothGattServer?.getService(SERVICE_UUID)
+            val charTx = service?.getCharacteristic(CHAR_RX_UUID)
+            if (charTx != null) {
+                charTx.value = bytes
+                connectedClients.forEach { device ->
+                    try {
+                        bluetoothGattServer?.notifyCharacteristicChanged(device, charTx, false)
+                    } catch (e: SecurityException) {
+                        Log.e("BleManager", "Error notifying client: ${e.message}")
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Sends multiple raw binary chunks (e.g. 193-byte photo shards) with pacing.
+     */
+    fun sendChunkedRawBytes(chunks: List<ByteArray>, interPacketDelayMs: Long = 35) {
+        scope.launch {
+            chunks.forEachIndexed { index, chunk ->
+                sendRawBytes(chunk)
+                if (interPacketDelayMs > 0) {
+                    kotlinx.coroutines.delay(interPacketDelayMs)
+                }
+                Log.d("BleManager", "Queued raw chunk ${index + 1}/${chunks.size} (${chunk.size} bytes)")
+            }
+            Log.d("BleManager", "All ${chunks.size} raw chunks queued for transmission")
+        }
+    }
+
+    /**
+     * Sets transceiver mode state (auto starts BLE peripheral advertising if enabled).
+     */
+    fun setTransceiverMode(enabled: Boolean) {
+        _isTransceiverMode.value = enabled
+        if (enabled) {
+            startAdvertising()
+        }
+    }
+
     private fun tryDiscoverServices(gatt: BluetoothGatt) {
         handler.postDelayed({
             try {
@@ -712,9 +793,13 @@ class BleManager private constructor(private val context: Context) {
             
             // Client writes to 0002 (CHAR_TX_UUID). Server receives on 0002.
             if (characteristic.uuid == CHAR_TX_UUID) { 
-                val message = String(value)
-                Log.d("BleManager", "Server received: $message")
-                handleIncomingData(message) 
+                if (value.isNotEmpty() && value[0] == 0xA1.toByte()) {
+                    scope.launch { _rawBytesReceived.emit(value) }
+                } else {
+                    val message = String(value)
+                    Log.d("BleManager", "Server received: $message")
+                    handleIncomingData(message) 
+                }
 
                 if (responseNeeded) {
                     bluetoothGattServer?.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, offset, null)

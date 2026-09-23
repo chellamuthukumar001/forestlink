@@ -42,6 +42,8 @@ class MsgRepository private constructor(private val context: Context, private va
     val scannedDevices: StateFlow<List<ScannedDevice>> = bleManager.scannedDevices
     val connectedDevice = bleManager.connectedDevice
 
+    val imagingPipeline = com.forest.offgrid.core.imaging.api.ImagingPipeline.getInstance(context, bleManager)
+
     init {
         // Initialize Auto Reconnect
 
@@ -100,6 +102,31 @@ class MsgRepository private constructor(private val context: Context, private va
         scope.launch {
             bleManager.mediaReceived.collect { (msgId, mediaType, base64Data) ->
                 handleReceivedMedia(msgId, mediaType, base64Data)
+            }
+        }
+
+        // Observe completed Super-Resolution image transfers from ImagingPipeline
+        scope.launch {
+            imagingPipeline.completedTransfers.collect { transferState ->
+                if (transferState.isIncoming && transferState.savedFilePath != null) {
+                    val message = Message(
+                        content = "📷 Photo (WebP 4x Super-Res)",
+                        senderId = "REMOTE_RANGER",
+                        receiverId = "ME",
+                        isIncoming = true,
+                        type = MessageType.IMAGE,
+                        status = MessageStatus.DELIVERED,
+                        mediaFilePath = transferState.savedFilePath,
+                        mediaSize = File(transferState.savedFilePath).length()
+                    )
+                    val id = msgDao.insertMessage(message)
+                    NotificationUtils.showNotification(
+                        context = context,
+                        title = "REMOTE_RANGER",
+                        message = "📷 Photo (4x Super-Resolution)"
+                    )
+                    Log.d("MsgRepo", "Saved incoming Super-Res photo message $id: ${transferState.savedFilePath}")
+                }
             }
         }
     }
@@ -363,45 +390,29 @@ class MsgRepository private constructor(private val context: Context, private va
     }
     
     /**
-     * Sends an image message by compressing, encoding, chunking, and transmitting over BLE.
+     * Sends an image message by compressing (320x240 WebP), Reed-Solomon FEC chunking (10:3),
+     * and transmitting binary shards over LoRa via BLE.
      */
-    suspend fun sendImageMessage(uri: Uri) {
-        // Compress image to tiny thumbnail
-        val compressedFile = MediaCompressor.compressImage(uri, context)
-        if (compressedFile == null) {
-            Log.e("MsgRepo", "Image compression failed")
-            return
+    suspend fun sendImageMessage(uri: Uri, isGrayscale: Boolean = false) {
+        val result = imagingPipeline.sendPhoto(uri, isGrayscale = isGrayscale)
+        result.onSuccess { imageId ->
+            val transferState = imagingPipeline.getTransferState(imageId)
+            val desc = if (isGrayscale) "📷 Photo (Mono LoRa, ${transferState?.compressedSizeBytes ?: 0} B)" else "📷 Photo (LoRa 4x SR, ${transferState?.compressedSizeBytes ?: 0} B)"
+            val message = Message(
+                content = desc,
+                senderId = "ME",
+                receiverId = "BROADCAST",
+                isIncoming = false,
+                type = MessageType.IMAGE,
+                status = MessageStatus.SENT,
+                mediaFilePath = uri.toString(),
+                mediaSize = transferState?.compressedSizeBytes?.toLong() ?: 0L
+            )
+            val id = msgDao.insertMessage(message)
+            Log.d("MsgRepo", "Image message queued: id $id, photo $imageId (${transferState?.totalShards} shards)")
+        }.onFailure { err ->
+            Log.e("MsgRepo", "Failed to send photo: ${err.message}")
         }
-        
-        // Save to permanent storage
-        val savedFile = MediaCompressor.saveMediaFile(compressedFile, context, "img")
-        compressedFile.delete() // Clean up cache
-        
-        // Save message to DB first
-        val message = Message(
-            content = "📷 Image",
-            senderId = "ME",
-            receiverId = "BROADCAST",
-            isIncoming = false,
-            type = MessageType.IMAGE,
-            status = MessageStatus.SENDING,
-            mediaFilePath = savedFile.absolutePath,
-            mediaSize = savedFile.length()
-        )
-        val id = msgDao.insertMessage(message)
-        
-        // Convert to Base64
-        val base64Data = MediaCompressor.fileToBase64(savedFile)
-        
-        // Create chunks
-        val chunks = ChunkedTransferManager.createChunks(id.toString(), base64Data, "IMAGE")
-        
-        // Send chunks via BLE
-        bleManager.sendChunkedData(chunks)
-        
-        // Mark as sent
-        msgDao.updateMessage(message.copy(id = id, status = MessageStatus.SENT))
-        Log.d("MsgRepo", "Image message sent: ${chunks.size} chunks, ${savedFile.length()} bytes")
     }
     
 
