@@ -1,13 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Top Hairline Stroke (Canopy Emerald Shimmer) -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#3300D4FF" />
+            <corners android:topLeftRadius="20dp" android:topRightRadius="20dp" />
+            <solid android:color="#4D22C55E" />
         </shape>
     </item>
+    <!-- Frosted Pine Noir Body -->
     <item android:top="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="#E60A0F0D" />
+            <corners android:topLeftRadius="19dp" android:topRightRadius="19dp" />
+            <solid android:color="#F209100B" />
         </shape>
     </item>
 </layer-list>
+

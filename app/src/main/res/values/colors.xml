@@ -1,65 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base Theme Colors -->
-    <color name="forest_dark">#0A0F0D</color>
-    <color name="forest_green">#1B3022</color>
-    <color name="neon_green">#39FF14</color>
-    <color name="cyber_blue">#00D4FF</color>
-    <color name="pulse_red">#FF3131</color>
-    <color name="card_bg">#141E1A</color>
-    <color name="text_primary">#E0E0E0</color>
-    <color name="text_secondary">#9E9E9E</color>
-    <color name="divider">#2A3530</color>
+    <!-- Base Theme Colors (Derived from lush forest canopy photo & app icon) -->
+    <color name="forest_dark">#09100B</color>         <!-- Deep dark pine noir -->
+    <color name="forest_green">#152B1E</color>        <!-- Deep forest foliage -->
+    <color name="neon_green">#22C55E</color>          <!-- Lush canopy emerald green -->
+    <color name="canopy_lime">#4ADE80</color>         <!-- Sunlit leaf highlight -->
+    <color name="cyber_blue">#38BDF8</color>          <!-- Sunlit clear sky cyan peeking through trees -->
+    <color name="pulse_red">#EF4444</color>           <!-- Vibrant tactical alert red -->
+    <color name="card_bg">#111F17</color>             <!-- Frosted dark canopy glass -->
+    <color name="card_bg_elevated">#16281E</color>    <!-- Slightly elevated bento card -->
+    <color name="text_primary">#F0FDF4</color>        <!-- Clean ice-mint white for maximum legibility -->
+    <color name="text_secondary">#8CA595</color>      <!-- Muted sage foliage tone -->
+    <color name="divider">#1F3327</color>
     
     <!-- Bubble & Border Colors -->
-    <color name="bubble_sent_start">#1B3022</color>
-    <color name="bubble_sent_end">#102015</color>
-    <color name="bubble_received_start">#1E2522</color>
-    <color name="bubble_received_end">#141A18</color>
-    <color name="glass_border_light">#44FFFFFF</color>
+    <color name="bubble_sent_start">#1B3D28</color>
+    <color name="bubble_sent_end">#12291B</color>
+    <color name="bubble_received_start">#18271E</color>
+    <color name="bubble_received_end">#101C15</color>
+    <color name="glass_border_light">#334ADE80</color>
     
-    <!-- Enhanced UI Colors -->
-    <color name="neon_green_glow">#8839FF14</color>
-    <color name="cyber_blue_glow">#8800D4FF</color>
-    <color name="pulse_red_glow">#88FF3131</color>
+    <!-- Enhanced UI Glow Colors -->
+    <color name="neon_green_glow">#4D22C55E</color>
+    <color name="cyber_blue_glow">#4D38BDF8</color>
+    <color name="pulse_red_glow">#4DEF4444</color>
     
     <!-- Gradient Variants -->
-    <color name="gradient_start">#0A0F0D</color>
-    <color name="gradient_mid">#1B3022</color>
-    <color name="gradient_end">#0A0F0D</color>
+    <color name="gradient_start">#09100B</color>
+    <color name="gradient_mid">#152B1E</color>
+    <color name="gradient_end">#09100B</color>
     
     <!-- Glass Effects -->
-    <color name="glass_overlay">#1AFFFFFF</color>
-    <color name="glass_border">#33FFFFFF</color>
+    <color name="glass_overlay">#1A22C55E</color>
+    <color name="glass_border">#2E4ADE80</color>
+    <color name="glass_border_cyan">#2E38BDF8</color>
     
     <!-- Map Node Colors -->
-    <color name="node_user">#2196F3</color>        <!-- Blue -->
-    <color name="node_nearby">#4CAF50</color>      <!-- Green -->
-    <color name="node_hub">#9C27B0</color>         <!-- Purple -->
-    <color name="sos_red">#F44336</color>          <!-- Red -->
-    <color name="node_hardware">#FF9800</color>    <!-- Orange -->
+    <color name="node_user">#38BDF8</color>           <!-- Sky Cyan -->
+    <color name="node_nearby">#22C55E</color>         <!-- Canopy Emerald -->
+    <color name="node_hub">#A855F7</color>            <!-- Tactical Purple -->
+    <color name="sos_red">#EF4444</color>             <!-- Emergency Red -->
+    <color name="node_hardware">#F59E0B</color>       <!-- Sunlight Amber -->
     
     <!-- Map UI Colors -->
-    <color name="primary">#1B3022</color>
-    <color name="accent">#00D4FF</color>
+    <color name="primary">#152B1E</color>
+    <color name="accent">#38BDF8</color>
 
     <!-- Signal Quality Semantic Colors -->
-    <color name="signal_excellent">#39FF14</color>  <!-- neon green -->
-    <color name="signal_good">#FFD600</color>        <!-- amber -->
-    <color name="signal_poor">#FF3131</color>        <!-- red -->
+    <color name="signal_excellent">#22C55E</color>     <!-- Canopy green -->
+    <color name="signal_good">#F59E0B</color>         <!-- Sunlight Amber -->
+    <color name="signal_poor">#EF4444</color>         <!-- Alert red -->
 
     <!-- Delivery Status Colors -->
-    <color name="status_queued">#9E9E9E</color>
-    <color name="status_sent">#39FF14</color>
-    <color name="status_ack">#00D4FF</color>
+    <color name="status_queued">#8CA595</color>
+    <color name="status_sent">#22C55E</color>
+    <color name="status_ack">#38BDF8</color>
 
     <!-- Channel Chip Colors -->
-    <color name="channel_primary">#1B3022</color>
-    <color name="channel_secondary">#1A1A3C</color>
-    <color name="channel_emergency">#3B0000</color>
+    <color name="channel_primary">#152B1E</color>
+    <color name="channel_secondary">#13242E</color>
+    <color name="channel_emergency">#3B1111</color>
 
-    <!-- Map chat overlay -->
-    <color name="map_chat_bg">#E6090F0D</color>
+    <!-- Map chat overlay & Nav -->
+    <color name="map_chat_bg">#E609100B</color>
+    <color name="nav_bar_bg">#E609100B</color>
     
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

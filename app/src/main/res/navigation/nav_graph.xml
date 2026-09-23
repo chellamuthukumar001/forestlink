@@ -14,19 +14,19 @@
         <action
             android:id="@+id/action_landing_to_dashboard"
             app:destination="@id/navigation_dashboard"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
+            app:enterAnim="@anim/dashboard_enter_scale"
+            app:exitAnim="@anim/landing_exit_scale"
+            app:popEnterAnim="@anim/dashboard_enter_scale"
+            app:popExitAnim="@anim/landing_exit_scale"
             app:popUpTo="@id/navigation_landing"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_landing_to_devices"
             app:destination="@id/navigation_devices"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
+            app:enterAnim="@anim/dashboard_enter_scale"
+            app:exitAnim="@anim/landing_exit_scale"
+            app:popEnterAnim="@anim/dashboard_enter_scale"
+            app:popExitAnim="@anim/landing_exit_scale"
             app:popUpTo="@id/navigation_landing"
             app:popUpToInclusive="true" />
     </fragment>

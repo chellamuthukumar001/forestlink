@@ -1,246 +1,441 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_hero">
+    android:layout_height="match_parent">
 
-    <!-- Animated Background Layer -->
+    <!-- Lush Forest Canopy Background (Uploaded Photo) -->
+    <ImageView
+        android:id="@+id/img_landing_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_landing_canopy"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
+
+    <!-- Atmospheric Gradient Scrim (Sunlit upper canopy -> Rich pine noir contrast) -->
     <View
         android:id="@+id/background_layer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_gradient_overlay"
-        android:alpha="0.6" />
+        android:background="@drawable/bg_landing_scrim" />
 
-    <!-- Main Content Container -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Scrollable Main Content for Guaranteed Fit Across Devices -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="32dp">
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-        <!-- Hero Icon with Glow Effect -->
-        <FrameLayout
-            android:id="@+id/logo_container"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginTop="80dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <!-- Outer Glow Circle -->
-            <View
-                android:id="@+id/logo_glow_outer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/shape_circle_pulse"
-                android:backgroundTint="@color/neon_green"
-                android:alpha="0.2" />
-
-            <!-- Inner Glow Circle -->
-            <View
-                android:id="@+id/logo_glow_inner"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:background="@drawable/shape_circle_pulse"
-                android:backgroundTint="@color/cyber_blue"
-                android:alpha="0.3" />
-
-            <!-- Logo Icon -->
-            <ImageView
-                android:id="@+id/img_logo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_share"
-                app:tint="@color/neon_green"
-                android:scaleType="centerInside"
-                android:transitionName="app_logo" />
-
-        </FrameLayout>
-
-        <!-- App Title -->
-        <TextView
-            android:id="@+id/text_app_name"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="FORESTLINK"
-            android:textColor="@color/neon_green"
-            android:textSize="42sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.15"
-            android:fontFamily="sans-serif-condensed"
-            android:shadowColor="@color/neon_green"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="20"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/logo_container"
-            android:transitionName="app_title" />
+            android:paddingHorizontal="24dp"
+            android:paddingTop="36dp"
+            android:paddingBottom="28dp">
 
-        <!-- Tagline -->
-        <TextView
-            android:id="@+id/text_tagline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Command • Connect • Survive"
-            android:textColor="@color/cyber_blue"
-            android:textSize="16sp"
-            android:letterSpacing="0.3"
-            android:fontFamily="sans-serif-light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_app_name" />
-
-        <!-- Mission Statement -->
-        <TextView
-            android:id="@+id/text_mission"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="Secure off-grid communication\nfor extreme environments"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:lineSpacingExtra="4dp"
-            android:fontFamily="sans-serif-medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_tagline" />
-
-        <!-- Feature Indicators -->
-        <LinearLayout
-            android:id="@+id/feature_indicators"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_mission">
-
-            <!-- Feature 1: Encrypted -->
+            <!-- Trend: Floating Glass Live Status Pill -->
             <LinearLayout
+                android:id="@+id/pill_network_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginHorizontal="12dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/card_elevated"
+                android:backgroundTint="#D90D1A13"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
                 <View
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:background="@drawable/shape_circle_pulse"
                     android:backgroundTint="@color/neon_green" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="ENCRYPTED"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="10sp"
+                    android:layout_marginStart="8dp"
+                    android:text="LORA 433MHZ • OFF-GRID READY"
+                    android:textColor="@color/canopy_lime"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
                     android:letterSpacing="0.1" />
             </LinearLayout>
 
-            <!-- Feature 2: Offline -->
-            <LinearLayout
+            <!-- Hero App Icon Container with Double Luminous Aura -->
+            <FrameLayout
+                android:id="@+id/logo_container"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pill_network_status">
+
+                <!-- Outer Pulse Glow (Canopy Emerald) -->
+                <View
+                    android:id="@+id/logo_glow_outer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_circle_pulse"
+                    android:backgroundTint="@color/neon_green"
+                    android:alpha="0.3" />
+
+                <!-- Inner Pulse Glow (Sunlit Sky Cyan) -->
+                <View
+                    android:id="@+id/logo_glow_inner"
+                    android:layout_width="102dp"
+                    android:layout_height="102dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/shape_circle_pulse"
+                    android:backgroundTint="@color/cyber_blue"
+                    android:alpha="0.4" />
+
+                <!-- Official Custom Tactical App Icon -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_logo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_launcher"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/RoundedImageView"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/cyber_blue"
+                    android:elevation="10dp"
+                    android:contentDescription="ForestLink Tactical Icon" />
+
+            </FrameLayout>
+
+            <!-- App Name (Crisp System Typography) -->
+            <TextView
+                android:id="@+id/text_app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginHorizontal="12dp">
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/shape_circle_pulse"
-                    android:backgroundTint="@color/cyber_blue" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="OFFLINE"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="10sp"
-                    android:letterSpacing="0.1" />
-            </LinearLayout>
-
-            <!-- Feature 3: SOS Ready -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginHorizontal="12dp">
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/shape_circle_pulse"
-                    android:backgroundTint="@color/pulse_red" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="SOS READY"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="10sp"
-                    android:letterSpacing="0.1" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- CTA Buttons Container -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <!-- Primary CTA -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_enter_command_center"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:text="ENTER COMMAND CENTER"
-                android:textColor="@color/black"
-                android:textSize="16sp"
+                android:layout_marginTop="14dp"
+                android:text="FORESTLINK"
+                android:textColor="@color/text_primary"
+                android:textSize="32sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:background="@drawable/btn_primary_selector"
-                app:elevation="12dp"
-                app:icon="@android:drawable/ic_menu_compass"
-                app:iconTint="@color/black"
-                app:iconGravity="start"
-                app:cornerRadius="16dp" />
+                android:letterSpacing="0.08"
+                android:shadowColor="@color/neon_green_glow"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/logo_container" />
 
-            <!-- Secondary CTA -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_connect_device"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="16dp"
-                android:text="CONNECT DEVICE"
+            <!-- Tagline -->
+            <TextView
+                android:id="@+id/text_tagline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="TACTICAL OFF-GRID MESH NETWORK"
                 android:textColor="@color/cyber_blue"
-                android:textSize="14sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:background="@drawable/btn_secondary_outline"
-                app:icon="@android:drawable/ic_menu_mylocation"
-                app:iconTint="@color/cyber_blue"
-                app:iconGravity="start"
-                app:strokeWidth="0dp"
-                app:cornerRadius="16dp" />
+                android:letterSpacing="0.14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_app_name" />
 
-        </LinearLayout>
+            <!-- Mission Statement Glass Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_mission"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                app:cardBackgroundColor="#CC111F17"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/glass_border"
+                app:strokeWidth="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_tagline">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/text_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:text="Autonomous LoRa mesh with on-device AI decision routing for extreme off-grid environments."
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:lineSpacingExtra="3dp"
+                    android:letterSpacing="0.03" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Trend: Modern 2x2 Bento Feature Grid -->
+            <LinearLayout
+                android:id="@+id/feature_indicators"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_mission">
+
+                <!-- Bento Row 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
+
+                    <!-- Bento Tile 1: 100% Off-Grid -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardBackgroundColor="#CC111F17"
+                        app:cardCornerRadius="12dp"
+                        app:strokeColor="@color/glass_border"
+                        app:strokeWidth="1dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <View
+                                    android:layout_width="7dp"
+                                    android:layout_height="7dp"
+                                    android:background="@drawable/shape_circle_pulse"
+                                    android:backgroundTint="@color/neon_green" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="100% OFF-GRID"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="Zero cellular • Long Range RF"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Bento Tile 2: AES-128 Cipher -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardBackgroundColor="#CC111F17"
+                        app:cardCornerRadius="12dp"
+                        app:strokeColor="@color/glass_border_cyan"
+                        app:strokeWidth="1dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <View
+                                    android:layout_width="7dp"
+                                    android:layout_height="7dp"
+                                    android:background="@drawable/shape_circle_pulse"
+                                    android:backgroundTint="@color/cyber_blue" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="AES-128 CIPHER"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="Military-grade E2E crypto"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Bento Row 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
+
+                    <!-- Bento Tile 3: AI Mesh Routed -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardBackgroundColor="#CC111F17"
+                        app:cardCornerRadius="12dp"
+                        app:strokeColor="@color/glass_border"
+                        app:strokeWidth="1dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <View
+                                    android:layout_width="7dp"
+                                    android:layout_height="7dp"
+                                    android:background="@drawable/shape_circle_pulse"
+                                    android:backgroundTint="@color/canopy_lime" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="AI MESH ROUTE"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="Predictive hop intelligence"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Bento Tile 4: SOS Beacon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardBackgroundColor="#CC111F17"
+                        app:cardCornerRadius="12dp"
+                        app:strokeColor="#33EF4444"
+                        app:strokeWidth="1dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <View
+                                    android:layout_width="7dp"
+                                    android:layout_height="7dp"
+                                    android:background="@drawable/shape_circle_pulse"
+                                    android:backgroundTint="@color/pulse_red" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="SOS BEACON"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="1-tap emergency broadcast"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Trend: High-Conversion CTA Action Stack -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/feature_indicators"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <!-- Primary CTA (Canopy Emerald) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_enter_command_center"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:text="ENTER COMMAND CENTER"
+                    android:textColor="@color/forest_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    app:backgroundTint="@color/neon_green"
+                    app:elevation="6dp"
+                    app:icon="@android:drawable/ic_menu_compass"
+                    app:iconTint="@color/forest_dark"
+                    app:iconGravity="textStart"
+                    app:cornerRadius="16dp" />
+
+                <!-- Secondary CTA (Frosted Glass with Sky Cyan Border) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_connect_device"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="10dp"
+                    android:text="PAIR TACTICAL NODE"
+                    android:textColor="@color/cyber_blue"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    app:backgroundTint="#CC111F17"
+                    app:strokeColor="@color/cyber_blue"
+                    app:strokeWidth="1.5dp"
+                    app:icon="@android:drawable/ic_menu_mylocation"
+                    app:iconTint="@color/cyber_blue"
+                    app:iconGravity="textStart"
+                    app:cornerRadius="16dp" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </FrameLayout>
+

@@ -250,6 +250,27 @@ class DashboardFragment : Fragment() {
                         }
                 }
         }
+
+        binding.cardSignalStatus.setOnClickListener {
+            findNavController().navigate(R.id.navigation_devices)
+        }
+
+        binding.cardBatteryStatus.setOnClickListener {
+            val state = viewModel.hardwareState.value
+            val hours = state.nodeHealth.hoursRemainingEst
+            val status = state.nodeHealth.status.name
+            com.google.android.material.snackbar.Snackbar.make(
+                binding.root,
+                "⚡ BATTERY: ${state.batteryLevel}% | HEALTH: $status | EST: ${hours.toInt()}h",
+                com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+            ).setBackgroundTint(resources.getColor(R.color.forest_green, null))
+             .setTextColor(resources.getColor(R.color.white, null))
+             .show()
+        }
+
+        binding.cardGpsStatus.setOnClickListener {
+            findNavController().navigate(R.id.navigation_map)
+        }
     }
 
 

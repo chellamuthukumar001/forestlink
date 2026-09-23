@@ -223,14 +223,7 @@ class LandingFragment : Fragment() {
     }
 
     private fun navigateToDashboard() {
-        // Fade out landing page
-        binding.root.animate()
-            .alpha(0f)
-            .setDuration(300)
-            .withEndAction {
-                findNavController().navigate(R.id.action_landing_to_dashboard)
-            }
-            .start()
+        findNavController().navigate(R.id.action_landing_to_dashboard)
     }
 
     override fun onDestroyView() {
