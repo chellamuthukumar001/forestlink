@@ -254,6 +254,20 @@ void loop() {
         
         // Pass it to the phone!
         forwardToBluetoothApp(sender, decryptedMsg);
+
+        // Emit JSON output for RForce LoRa Gateway & Web Serial listener
+        float parsedLat = currentLat;
+        float parsedLon = currentLon;
+        int latStart = decryptedMsg.indexOf('[');
+        int latComma = decryptedMsg.indexOf(',', latStart);
+        int latEnd = decryptedMsg.indexOf(']', latComma);
+        if (latStart != -1 && latComma != -1 && latEnd != -1) {
+            parsedLat = decryptedMsg.substring(latStart + 1, latComma).toFloat();
+            parsedLon = decryptedMsg.substring(latComma + 1, latEnd).toFloat();
+        }
+
+        String jsonPayload = "JSON_LORA:{\"node_id\":\"" + sender + "\",\"message\":\"" + decryptedMsg + "\",\"latitude\":" + String(parsedLat, 6) + ",\"longitude\":" + String(parsedLon, 6) + ",\"rssi\":" + String(LoRa.packetRssi()) + ",\"snr\":" + String(LoRa.packetSnr()) + "}";
+        Serial.println(jsonPayload);
     }
   }
 }
